@@ -20,7 +20,7 @@ public class ProductController {
     
     @GetMapping
     public ResponseEntity<Page<ProductListData>> getProducts(
-            @PageableDefault(page = 0, size = 8, sort = { "popularity" })Pageable pagination ) {
-        return ResponseEntity.ok( productRepository.findAll(pagination).map( ProductListData::new ) );
+            @PageableDefault( page = 0, size = 8, sort = "popularity" )Pageable pagination ) {
+        return ResponseEntity.ok( productRepository.findAll( pagination ).map( ProductListData::new ) );
     }
 }
