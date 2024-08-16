@@ -20,7 +20,4 @@ public class Categories {
     @Enumerated( EnumType.STRING )
     private CategoryName categoryName;
     
-    public Categories(CategoryName categoryName) {
-        this.categoryName = categoryName;
-    }
 }
