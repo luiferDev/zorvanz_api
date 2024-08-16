@@ -27,13 +27,4 @@ public class Product {
     private Integer stock;
     private Double popularity;
     private String imageUrl;
-    
-    public Product(ProductListData data) {
-        this.name = data.name();
-        this.description = data.description();
-        this.price = data.price();
-        this.stock = data.stock();
-        this.popularity = data.popularity();
-        this.imageUrl = data.imageUrl();
-    }
 }
