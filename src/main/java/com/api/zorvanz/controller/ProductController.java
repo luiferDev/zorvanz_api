@@ -1,6 +1,5 @@
 package com.api.zorvanz.controller;
 
-import com.api.zorvanz.domain.category.CategoryData;
 import com.api.zorvanz.domain.products.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
