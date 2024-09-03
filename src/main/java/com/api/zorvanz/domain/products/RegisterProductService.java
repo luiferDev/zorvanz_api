@@ -15,7 +15,9 @@ public class RegisterProductService {
     
     public ProductListData registerProduct( RegisterProductData data ) {
         
-        //TODO: no dejar que se agreguen productos con el mismo nombre
+        if ( productRepository.existsByName( data.name() ) ) {
+            throw new ValidationException( "Nombre de Producto existente" );
+        }
         
         if ( ! categoriesRepository.existsById( data.categoryId() )
                 ||categoriesRepository.findById( data.categoryId() ).isEmpty() ) {
