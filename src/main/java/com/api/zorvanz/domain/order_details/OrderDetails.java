@@ -3,14 +3,12 @@ package com.api.zorvanz.domain.order_details;
 import com.api.zorvanz.domain.orders.Orders;
 import com.api.zorvanz.domain.products.Product;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity (name = "OrderDetails")
 @Table (name = "order_details")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode (of = "id")
@@ -26,4 +24,17 @@ public class OrderDetails {
     private Product productId;
     private Integer quantity;
     private Double unitPrice;
+    private Double totalAmount;
+    
+    public void setTotalAmount ( ) {
+        this.totalAmount = this.unitPrice * this.quantity;
+    }
+    
+    public void setOrder ( Orders order ) {
+        this.orderId = order;
+    }
+    
+    public void setProduct ( Product product ) {
+        this.productId = product;
+    }
 }

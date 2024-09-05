@@ -5,6 +5,7 @@ public record OrderDetailData(
         Long orderId,
         Long productId,
         Integer quantity,
-        Double unitPrice
+        Double unitPrice,
+        Double totalAmount
 ) {
 }
