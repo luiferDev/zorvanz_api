@@ -2,14 +2,12 @@ package com.api.zorvanz.domain.products;
 
 import com.api.zorvanz.domain.category.Categories;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Table(name = "products")
 @Entity(name = "Product")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode (of = "id")
@@ -27,4 +25,8 @@ public class Product {
     private Integer stock;
     private Double popularity;
     private String imageUrl;
+    
+    public void setStock ( int i ) {
+        this.stock = i;
+    }
 }
