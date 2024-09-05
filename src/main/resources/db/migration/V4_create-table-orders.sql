@@ -1,4 +1,4 @@
-create table products (
+create table orders (
       id bigint not null auto_increment,
       customer_id bigint not null,
       total_amount decimal(10, 2) not null,
