@@ -2,14 +2,14 @@ package com.api.zorvanz.domain.orders;
 
 import com.api.zorvanz.domain.customer.Customer;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Entity ( name = "Orders" )
 @Table ( name = "orders" )
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode ( of = "id" )
@@ -22,5 +22,6 @@ public class Orders {
     private Customer customer;
     private Double totalAmount;
     @Enumerated(EnumType.STRING)
-    Status status;
+    private Status status;
+    private LocalDateTime date;
 }
