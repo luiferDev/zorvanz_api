@@ -1,6 +1,6 @@
 package com.api.zorvanz.domain.users;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public record UserData(
         Long id,
@@ -9,6 +9,6 @@ public record UserData(
         String email,
         String password,
         String role,
-        Date createdAt
+        LocalDateTime createdAt
 ) {
 }
