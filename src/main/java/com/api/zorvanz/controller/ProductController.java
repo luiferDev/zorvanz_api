@@ -34,8 +34,15 @@ public class ProductController {
     @PostMapping
     @Transactional
     public ResponseEntity createProduct(
-            @RequestBody @Valid RegisterProductData registerProduct) {
+            @RequestBody @Valid RegisterProductData registerProduct ) {
         var response = registerProductService.registerProduct( registerProduct );
         return ResponseEntity.ok( response );
+    }
+    
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity deleteProduct( @PathVariable Long id ) {
+        productRepository.deleteById( id );
+        return ResponseEntity.noContent().build();
     }
 }
