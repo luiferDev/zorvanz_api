@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +21,11 @@ public class ProductController {
     private RegisterProductService registerProductService;
     
     @GetMapping
-    public ResponseEntity<Page<ProductListData>> getProducts(
-            @PageableDefault( page = 0, size = 8, sort = "popularity" )Pageable pagination ) {
+    public ResponseEntity <Page <ProductListData>> getProducts (
+            @PageableDefault ( page = 0, size = 8, sort = "popularity", direction = Sort.Direction.DESC ) Pageable pagination ) {
         return ResponseEntity.ok( productRepository.findAll( pagination ).map( ProductListData::new ) );
     }
+    
     
     @GetMapping("/{id}")
     public ResponseEntity<ProductListData> getProductById( @PathVariable Long id ) {

@@ -9,4 +9,5 @@ public record ProductData(
         Integer stock,
         Double popularity,
         String imageUrl
-) {}
+) {
+}

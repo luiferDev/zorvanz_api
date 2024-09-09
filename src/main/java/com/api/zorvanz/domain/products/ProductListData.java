@@ -12,7 +12,7 @@ public record ProductListData(
         Double popularity,
         String imageUrl
 ) {
-    public ProductListData(Product product) {
+    public ProductListData ( Product product ) {
         this(
                 product.getId(),
                 product.getName(),
