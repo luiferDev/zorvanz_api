@@ -8,12 +8,4 @@ public record CartItemData(
         ProductListData product,
         Integer quantity
 ) {
-    public CartItemData ( CartItem cartItem ) {
-        this(
-                cartItem.getId(),
-                cartItem.getCart().getId(),
-                new ProductListData ( cartItem.getProduct() ),
-                cartItem.getQuantity()
-        );
-    }
 }

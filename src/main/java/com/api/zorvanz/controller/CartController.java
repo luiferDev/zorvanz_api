@@ -17,11 +17,11 @@ public class CartController {
     @Autowired
     private CartService cartService;
     
-    @GetMapping("/{id}")
-    public ResponseEntity<CartData> getCartById( @PathVariable Long id ) {
-        Cart cart = cartRepository.getReferenceById( id );
-        return ResponseEntity.ok( new CartData( cart ) );
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<CartData> getCartById( @PathVariable Long id ) {
+//        Cart cart = cartRepository.getReferenceById( id );
+//        return ResponseEntity.ok( new CartData( cart ) );
+//    }
     
     @PostMapping
     @Transactional
