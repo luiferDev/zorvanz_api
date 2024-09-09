@@ -1,0 +1,4 @@
+CREATE TABLE cart (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    total_amount DECIMAL(19, 4) DEFAULT 0,
+);
