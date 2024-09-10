@@ -1,11 +1,16 @@
 package com.api.zorvanz.controller;
 
-import com.api.zorvanz.domain.cart.*;
-import jakarta.transaction.Transactional;
+import com.api.zorvanz.domain.cart.CartRegisterData;
+import com.api.zorvanz.domain.cart.CartRepository;
+import com.api.zorvanz.domain.cart.CartService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/cart")
@@ -24,9 +29,13 @@ public class CartController {
 //    }
     
     @PostMapping
-    @Transactional
-    public ResponseEntity createCart ( @RequestBody @Valid CartRegisterData cartRegisterData ) {
+    public ResponseEntity createCart (
+            @RequestBody @Valid CartRegisterData cartRegisterData,  UriComponentsBuilder uriBuilder
+    ) {
         var cart = cartService.createCart( cartRegisterData );
-        return ResponseEntity.ok( cart );
+        
+        var uri = uriBuilder.path("/api/cart/{id}")
+                .buildAndExpand(cart.id()).toUri();
+        return ResponseEntity.created( uri ).body( cart );
     }
 }

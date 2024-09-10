@@ -1,12 +1,11 @@
 package com.api.zorvanz.domain.cart;
 
-import com.api.zorvanz.domain.cartitem.CartItemData;
+import com.api.zorvanz.domain.cartitem.CartItemResponse;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public record CartRegisterData(
-        BigDecimal totalAmount,
-        List <CartItemData> cartItems
+        Double totalAmount,
+        List <CartItemResponse> cartItems
 ) {
 }

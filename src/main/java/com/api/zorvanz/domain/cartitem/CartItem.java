@@ -5,8 +5,6 @@ import com.api.zorvanz.domain.products.Product;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
-
 @Entity(name = "CartItem")
 @Table (name = "cart_items")
 @Getter
@@ -19,14 +17,23 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int quantity;
-    private BigDecimal unitPrice;
-    private BigDecimal totalPrice;
+    private Double unitPrice;
+    private Double totalPrice;
     
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
     
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "cart_id")
     private Cart cart;
+    
+//    public void getUnitPrice () {
+//        this.unitPrice = this.product.getPrice();
+//    }
+    
+//    public void getTotalPrice () {
+//        this.totalPrice = this.unitPrice * this.quantity;
+//    }
+//
 }

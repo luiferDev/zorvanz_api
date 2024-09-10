@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/cart-item")
@@ -23,8 +24,11 @@ public class CartItemController {
 //    }
     
     @PostMapping
-    public ResponseEntity createCartItem ( @RequestBody @Valid CartItemRegister data ) {
+    public ResponseEntity createCartItem ( @RequestBody @Valid CartItemRegister data, UriComponentsBuilder uriBuilder ) {
+        
         var response = cartItemService.addItemToCart( data );
+        
+        var uri = uriBuilder.path("/api/cart-item/{id}").buildAndExpand(response.id()).toUri();
         return ResponseEntity.ok( response );
     }
 }

@@ -1,7 +1,7 @@
 package com.api.zorvanz.domain.products;
 
 public record ProductData(
-        Long productId,
+        Long id,
         String name,
         String description,
         Double price,
