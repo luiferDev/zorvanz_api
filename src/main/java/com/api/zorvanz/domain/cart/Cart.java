@@ -4,23 +4,24 @@ import com.api.zorvanz.domain.cartitem.CartItem;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "Carts")
-@Table(name = "carts")
+@Entity ( name = "Carts" )
+@Table ( name = "carts" )
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode ( of = "id" )
 public class Cart {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue ( strategy = GenerationType.IDENTITY )
     private Long id;
-    private Double totalAmount;
+    private BigDecimal totalAmount = BigDecimal.ZERO;
     
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany ( mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER )
     private List <CartItem> cartItems = new ArrayList <>();
 
 //        public void addItem( CartItem cartItem, int quantity) {
@@ -41,13 +42,14 @@ public class Cart {
 //        public void removeItem(Long productId) {
 //            cartItems.removeIf(item -> item.getProduct().getId().equals(productId));
 //        }
-        
-        public List<CartItem> getItems() {
-            return cartItems;
-        }
-        
-        public void clearCart() {
-            cartItems.clear();
-        }
+    
+    public void setCartItems ( List <CartItem> cartItems ) {
+        this.cartItems = cartItems;
+        cartItems.forEach( item -> item.setCart( this ) );  // Asegura que cada CartItem tenga la referencia al Cart
+    }
+    
+    public void clearCart () {
+        cartItems.clear();
+    }
 }
 

@@ -5,6 +5,8 @@ import com.api.zorvanz.domain.products.Product;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity (name = "OrderDetails")
 @Table (name = "order_details")
 @Getter
@@ -23,11 +25,11 @@ public class OrderDetails {
     @JoinColumn(name = "product_id")
     private Product productId;
     private Integer quantity;
-    private Double unitPrice;
-    private Double totalAmount;
+    private BigDecimal unitPrice;
+    private BigDecimal totalAmount;
     
     public void setTotalAmount ( ) {
-        this.totalAmount = this.unitPrice * this.quantity;
+        this.totalAmount = unitPrice.multiply( BigDecimal.valueOf( quantity ) );
     }
     
     public void setOrder ( Orders order ) {

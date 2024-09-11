@@ -4,6 +4,8 @@ import com.api.zorvanz.domain.category.Categories;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Table(name = "products")
 @Entity(name = "Product")
 @Getter
@@ -18,7 +20,7 @@ public class Product {
     private Long id;
     private String name;
     private String description;
-    private Double price;
+    private BigDecimal price = BigDecimal.ZERO;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Categories category;

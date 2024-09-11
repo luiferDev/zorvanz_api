@@ -29,13 +29,15 @@ public class CartController {
 //    }
     
     @PostMapping
-    public ResponseEntity createCart (
-            @RequestBody @Valid CartRegisterData cartRegisterData,  UriComponentsBuilder uriBuilder
+    public ResponseEntity <?> createCart (
+            @RequestBody @Valid CartRegisterData cartRegisterData, UriComponentsBuilder uriBuilder
     ) {
+        
         var cart = cartService.createCart( cartRegisterData );
         
-        var uri = uriBuilder.path("/api/cart/{id}")
-                .buildAndExpand(cart.id()).toUri();
+        var uri = uriBuilder.path( "/api/cart/{id}" )
+                .buildAndExpand( cart.id() ).toUri();
         return ResponseEntity.created( uri ).body( cart );
     }
+    
 }

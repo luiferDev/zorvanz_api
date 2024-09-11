@@ -1,13 +1,14 @@
 package com.api.zorvanz.domain.cart;
 
-import com.api.zorvanz.domain.cartitem.CartItem;
+import com.api.zorvanz.domain.cartitem.CartItemResponse;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public record CartResponse(
         Long id,
-        Double totalAmount,
-        List<CartItem> cartItems
+        BigDecimal totalAmount,
+        List <CartItemResponse> cartItems
 ) {
     public CartResponse ( Cart cart ) {
         this(
@@ -15,13 +16,9 @@ public record CartResponse(
                 cart.getTotalAmount(),
                 cart.getCartItems()
                         .stream()
-                        .map( cartItem -> new CartItem(
-                                cartItem.getId(),
-                                cartItem.getQuantity(),
-                                cartItem.getUnitPrice(),
-                                cartItem.getTotalPrice(),
-                                cartItem.getProduct(),
-                                cartItem.getCart())
+                        .map( cartItem -> new CartItemResponse(
+                                cartItem.getProduct().getId(),
+                                cartItem.getQuantity() )
                         )
                         .toList()
         );

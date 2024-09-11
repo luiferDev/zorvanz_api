@@ -44,7 +44,7 @@ public class OrderService {
             orderDetailsRepository.save(orderDetail);
             
             // Actualizar el total de la orden
-            totalAmount += orderDetail.getTotalAmount();
+           // totalAmount += orderDetail.getTotalAmount();
             
             // Reducir el stock del producto
             product.setStock(product.getStock() - detailData.quantity());
