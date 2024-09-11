@@ -1,11 +1,15 @@
 package com.api.zorvanz.domain.cartitem;
 
-import jakarta.validation.constraints.NotNull;
+import com.api.zorvanz.domain.products.ProductResponse;
+
+import java.math.BigDecimal;
 
 public record CartItemResponse(
-        @NotNull
-        Long productId,
-        @NotNull(message = "Quantity is required")
-        Integer quantity
+        Long id,
+        ProductResponse product,
+        Long cartId,
+        Integer quantity,
+        BigDecimal totalPrice,
+        BigDecimal unitPrice
 ) {
 }

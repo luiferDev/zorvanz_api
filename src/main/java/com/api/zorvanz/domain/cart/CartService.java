@@ -1,8 +1,8 @@
 package com.api.zorvanz.domain.cart;
 
 import com.api.zorvanz.domain.cartitem.CartItem;
+import com.api.zorvanz.domain.cartitem.CartItemRegister;
 import com.api.zorvanz.domain.cartitem.CartItemRepository;
-import com.api.zorvanz.domain.cartitem.CartItemResponse;
 import com.api.zorvanz.domain.products.Product;
 import com.api.zorvanz.domain.products.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class CartService {
         
         // Obtener los productIds y las cantidades
         List <Long> productIds = cartRegisterData.cartItems().stream()
-                .map( CartItemResponse::productId )
+                .map( CartItemRegister::productId )
                 .toList();
         
         // Obtener los productos usando productIds
