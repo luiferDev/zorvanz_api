@@ -7,6 +7,8 @@
 # You can add other services your application may depend on here, such as a
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
+
+# TODO: hide sensible data for uploading to github and deploy it
 services:
   server:
     build:
@@ -34,6 +36,15 @@ services:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       timeout: 10s
       retries: 10
+
+    # TODO look for more information about volumes
+    volumes:
+      - zorvanz:/var/lib/postgresql
+
+  volumes:
+    zorvanz:
+
+
 #  volumes:
 #          - db-data:/var/lib/postgresql/data
 #  environment:
