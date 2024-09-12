@@ -26,62 +26,16 @@ public class CartService {
     
     public CartResponse createCart ( CartRegisterData cartRegisterData ) {
         
-        // Obtener los productIds y las cantidades
-        List <Long> productIds = cartRegisterData.cartItems().stream()
-                .map( CartItemRegister::productId )
-                .toList();
-        
         // Obtener los productos usando productIds
-        var products = productRepository.findAllById( productIds );
+        var products = productRepository.findAllById( getProductsbyId( cartRegisterData ) );
         
-        // Obtener las cantidades
-//        var quantities = cartRegisterData.cartItems().stream()
-//                .map( CartItemResponse::quantity )
-//                .toList();
-        
-        // Obtener los precios de los productos
-        // sumar totalPrice de cada cartId en cartItem
-        var prices = products.stream()
-                .map( Product::getPrice )
-                .toList();
-        
-        // Calcular el totalAmount
-        // BigDecimal totalAmount = calculateTotal( quantities, prices );
-        
-//        BigDecimal totalAmount = prices.stream()
-//                .reduce( BigDecimal.ZERO, BigDecimal::add );
-        
-        // Crear el Cart
-        var cart = new Cart( null, BigDecimal.ZERO, new ArrayList <>() );
+        // inicializar el Cart
+        Cart cart = new Cart( null, BigDecimal.ZERO, new ArrayList <>() );
         
         // Crear CartItems usando productos y cantidades
-        var cartItems = new ArrayList <>( cartRegisterData.cartItems().stream()
-                .map( cartItemResponse -> {
-                    Product product = products.stream()
-                            .filter( p -> p.getId().equals( cartItemResponse.productId() ) )
-                            .findFirst()
-                            .orElseThrow( () -> new IllegalArgumentException( "Product not found" ) );
-                    
-                    // Convertir quantity a BigDecimal
-                    BigDecimal quantity = BigDecimal.valueOf( cartItemResponse.quantity() );
-                    
-                    // Multiplicar price (BigDecimal) por quantity (BigDecimal)
-                    BigDecimal totalPrice = product.getPrice().multiply( quantity );
-                    
-                    return new CartItem(
-                            null,
-                            cartItemResponse.quantity(),       // Cantidad original
-                            product.getPrice(),                // Precio unitario como BigDecimal
-                            totalPrice,                        // Total calculado como BigDecimal
-                            product,                           // El producto
-                            cart                               // Cart se asignará después
-                    );
-                } )
-                .toList() );
+        var cartItems = getCartItem( cartRegisterData, products, cart );
         
-        var totalAmount = cartItems.stream()
-                .map( CartItem::getTotalPrice )
-                .reduce( BigDecimal.ZERO, BigDecimal::add );
+        var totalAmount = getTotalAmount( cartItems );
         
         // Asignar los CartItems al Cart
         cart.setCartItems( cartItems );
@@ -93,27 +47,45 @@ public class CartService {
         return new CartResponse( cart );
     }
     
-    public BigDecimal calculateTotal ( List <Integer> quantities, List <BigDecimal> prices ) {
-        if ( quantities.size() != prices.size() ) {
-            throw new IllegalArgumentException( "Las listas deben tener el mismo tamaño." );
-        }
-        
-        // Inicializar el total como BigDecimal
-        BigDecimal total = new BigDecimal( "0.00" );
-        
-        // Iterar sobre las listas de cantidades y precios
-        for ( int i = 0; i < quantities.size(); i++ ) {
-            
-            BigDecimal price = prices.get( i );   // Obtener cada precio como BigDecimal
-            BigDecimal quantity = BigDecimal.valueOf( quantities.get( i ) ); // Convertir cantidad a BigDecimal
-            
-            // Multiplicar precio por cantidad y sumarlo al total
-            var totalAmount = price.multiply( quantity );
-            
-            total = total.add( totalAmount );
-        }
-        
-        return total;
+    public BigDecimal getTotalAmount ( List <CartItem> cartItems ) {
+        return cartItems.stream()
+                .map( CartItem::getTotalPrice )
+                .reduce( BigDecimal.ZERO, BigDecimal::add );
+    }
+    
+    public List <Long> getProductsbyId ( CartRegisterData data ) {
+        // Obtener los productIds y las cantidades
+        List <Long> productIds = data.cartItems().stream()
+                .map( CartItemRegister::productId )
+                .toList();
+        return productIds;
+    }
+    
+    public List <CartItem> getCartItem ( CartRegisterData data, List<Product> products, Cart cart ) {
+        // obtener los item de los productos
+        return new ArrayList <>( data.cartItems().stream()
+                .map( cartItemRegister -> {
+                    Product product = products.stream()
+                            .filter( p -> p.getId().equals( cartItemRegister.productId() ) )
+                            .findFirst()
+                            .orElseThrow( () -> new IllegalArgumentException( "Product not found" ) );
+                    
+                    // Convertir quantity a BigDecimal
+                    BigDecimal quantity = BigDecimal.valueOf( cartItemRegister.quantity() );
+                    
+                    // Multiplicar price (BigDecimal) por quantity (BigDecimal)
+                    BigDecimal totalPrice = product.getPrice().multiply( quantity );
+                    
+                    return new CartItem(
+                            null,
+                            cartItemRegister.quantity(),       // Cantidad original
+                            product.getPrice(),                // Precio unitario como BigDecimal
+                            totalPrice,                        // Total calculado como BigDecimal
+                            product,                           // El producto
+                            cart                               // Cart se asignará después
+                    );
+                } )
+                .toList() );
     }
 }
 
