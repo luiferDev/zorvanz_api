@@ -37,7 +37,7 @@ services:
       timeout: 10s
       retries: 10
 
-    # TODO look for more information about volumes
+    # TODO: look for more information about volumes
     volumes:
       - zorvanz:/var/lib/postgresql
 
