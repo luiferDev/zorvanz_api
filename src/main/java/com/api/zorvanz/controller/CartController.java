@@ -1,15 +1,11 @@
 package com.api.zorvanz.controller;
 
-import com.api.zorvanz.domain.cart.CartRegisterData;
-import com.api.zorvanz.domain.cart.CartRepository;
-import com.api.zorvanz.domain.cart.CartService;
+import com.api.zorvanz.domain.cart.*;
+import com.api.zorvanz.domain.products.ProductRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
@@ -22,11 +18,8 @@ public class CartController {
     @Autowired
     private CartService cartService;
     
-//    @GetMapping("/{id}")
-//    public ResponseEntity<CartData> getCartById( @PathVariable Long id ) {
-//        Cart cart = cartRepository.getReferenceById( id );
-//        return ResponseEntity.ok( new CartData( cart ) );
-//    }
+    @Autowired
+    private ProductRepository productRepository;
     
     @PostMapping
     public ResponseEntity <?> createCart (
@@ -40,4 +33,16 @@ public class CartController {
         return ResponseEntity.created( uri ).body( cart );
     }
     
+    @GetMapping ("/{id}")
+    public ResponseEntity<CartData> getCartById( @PathVariable Long id, CartRegisterData data ) {
+        Cart cart = cartRepository.getReferenceById( id );
+//        Cart cart1 = new Cart();
+//        var products = productRepository.findAllById( cartService.getProductsbyId( data ) );
+//        var cartItems = cartService.getCartItem( data, products, cart1 );
+//        var totalAmount = cartService.getTotalAmount( cartItems );
+//        cart1.setCartItems( cartItems );
+//        cart1.setTotalAmount( totalAmount );
+        // TODO: get cartItemData
+        return ResponseEntity.ok( new CartData( cart.getId(), null, null ) );
+    }
 }
