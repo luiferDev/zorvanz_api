@@ -13,43 +13,53 @@ services:
   server:
     build:
       context: .
+      target: development
     mem_limit: 512m
     ports:
       - "8080:8080"
+      - "8000:8000"
     environment:
-      DB_URL: jdbc:postgresql://host.docker.internal:5432/zorvanz
-      DB_USER: postgres
-      DB_PASSWORD: 158365402Luifer@
+      DB_URL: ${DB_URL}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    develop:
+      watch:
+        - action: rebuild
+          path: .
     restart: always
     depends_on:
-      localhost:
+      db:
         condition: service_healthy
-  localhost:
+  db:
     image: postgres:16
     ports:
       - "5432:5432"
+#    secrets:
+#      - db-password
     environment:
-      POSTGRES_PASSWORD: 158365402Luifer@
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DATABASE: zorvanz
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
       timeout: 10s
       retries: 10
 
     # TODO: look for more information about volumes
-    volumes:
-      - zorvanz:/var/lib/postgresql
+#    volumes:
+#      - zorvanz:/var/lib/postgresql
 
-  volumes:
-    zorvanz:
-
+#  volumes:
+#    zorvanz:
+#  secrets:
+#    db-password:
+#      file: db/password.txt
 
 #  volumes:
 #          - db-data:/var/lib/postgresql/data
 #  environment:
-#           POSTGRES_PASSWORD=158365402Luifer@
-#           POSTGRES_DATABASE=zorvanz
+#           POSTGRES_PASSWORD=
+#           POSTGRES_DATABASE=
 #  ports:
 #          - 5432:5432
 #  healthcheck:
