@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CartService {
+public class CartService implements ICartService {
     
     @Autowired
     private CartRepository cartRepository;
@@ -24,6 +24,14 @@ public class CartService {
     @Autowired
     private ProductRepository productRepository;
     
+    private CartService () {
+    }
+    
+    public static CartService createCartService () {
+        return new CartService();
+    }
+    
+    @Override
     public CartResponse createCart ( CartRegisterData cartRegisterData ) {
         
         // Obtener los productos usando productIds
@@ -47,12 +55,14 @@ public class CartService {
         return new CartResponse( cart );
     }
     
+    @Override
     public BigDecimal getTotalAmount ( List <CartItem> cartItems ) {
         return cartItems.stream()
                 .map( CartItem::getTotalPrice )
                 .reduce( BigDecimal.ZERO, BigDecimal::add );
     }
     
+    @Override
     public List <Long> getProductsbyId ( CartRegisterData data ) {
         // Obtener los productIds y las cantidades
         List <Long> productIds = data.cartItems().stream()
@@ -61,6 +71,7 @@ public class CartService {
         return productIds;
     }
     
+    @Override
     public List <CartItem> getCartItem ( CartRegisterData data, List<Product> products, Cart cart ) {
         // obtener los item de los productos
         return new ArrayList <>( data.cartItems().stream()
