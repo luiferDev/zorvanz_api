@@ -1,12 +1,11 @@
 # syntax=docker/dockerfile:1
 
-# Parte de la imagen deps
 FROM eclipse-temurin:17-jdk-jammy as deps
 WORKDIR /build
 COPY --chmod=0755 mvnw mvnw
 COPY .mvn/ .mvn/
-COPY pom.xml pom.xml
-RUN --mount=type=cache,target=/root/.m2 ./mvnw dependency:go-offline -DskipTests
+RUN --mount=type=bind,source=pom.xml,target=pom.xml \
+    --mount=type=cache,target=/root/.m2 ./mvnw dependency:go-offline -DskipTests
 
 FROM deps as package
 WORKDIR /build
