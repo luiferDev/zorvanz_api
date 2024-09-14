@@ -1,20 +1,16 @@
 # syntax=docker/dockerfile:1
 
-# syntax=docker/dockerfile:1
-
 FROM eclipse-temurin:17-jdk-jammy as deps
 WORKDIR /build
 COPY --chmod=0755 mvnw mvnw
 COPY .mvn/ .mvn/
-RUN --mount=type=bind,source=pom.xml,target=pom.xml \
-    --mount=type=cache,target=/root/.m2,id=maven-cache ./mvnw dependency:go-offline -DskipTests
+COPY pom.xml pom.xml
+RUN ./mvnw dependency:go-offline -DskipTests
 
 FROM deps as package
 WORKDIR /build
 COPY ./src src/
-RUN --mount=type=bind,source=pom.xml,target=pom.xml \
-    --mount=type=cache,target=/root/.m2,id=maven-cache \
-    ./mvnw package -DskipTests && \
+RUN ./mvnw package -DskipTests && \
     mv target/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout).jar target/app.jar
 
 FROM package as extract
