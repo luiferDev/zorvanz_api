@@ -24,6 +24,10 @@ public class RegisterProductService {
             throw new ValidationException( "Categoria no existente" );
         }
         
+        if ( data.popularity() < 0 || data.popularity() > 5) {
+            throw new ValidationException( "La popularidad debe estar entre 0 y 5" );
+        }
+        
         var category = categoriesRepository.findById( data.categoryId() ).get();
         
         var product = new Product( null, data.name(), data.description(),

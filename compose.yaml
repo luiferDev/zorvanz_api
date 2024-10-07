@@ -47,7 +47,7 @@
 
     # TODO: look for more information about volumes
 #    volumes:
-#      - zorvanz:/var/lib/postgresql
+#      - zorvanz:/var/lib/pgsql
 
 #  volumes:
 #    zorvanz:
@@ -56,7 +56,7 @@
 #      file: db/password.txt
 
 #  volumes:
-#          - db-data:/var/lib/postgresql/data
+#          - db-data:/var/lib/pgsql
 #  environment:
 #           POSTGRES_PASSWORD=
 #           POSTGRES_DATABASE=

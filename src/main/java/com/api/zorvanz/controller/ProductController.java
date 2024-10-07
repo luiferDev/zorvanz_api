@@ -26,7 +26,6 @@ public class ProductController {
         return ResponseEntity.ok( productRepository.findAll( pagination ).map( ProductListData::new ) );
     }
     
-    
     @GetMapping("/{id}")
     public ResponseEntity<ProductListData> getProductById( @PathVariable Long id ) {
         Product product = productRepository.getReferenceById( id );
