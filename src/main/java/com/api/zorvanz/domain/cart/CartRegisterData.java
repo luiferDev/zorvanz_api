@@ -5,6 +5,7 @@ import com.api.zorvanz.domain.cartitem.CartItemRegister;
 import java.util.List;
 
 public record CartRegisterData(
-        List <CartItemRegister> cartItems
+		Long customerId,
+		List <CartItemRegister> cartItems
 ) {
 }
