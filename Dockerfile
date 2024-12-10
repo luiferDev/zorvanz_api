@@ -6,6 +6,7 @@ COPY --chmod=0755 mvnw mvnw
 COPY .mvn/ .mvn/
 COPY pom.xml pom.xml
 RUN ./mvnw dependency:go-offline -DskipTests
+RUN chmod +x ./mvnw
 
 FROM deps as package
 WORKDIR /build
