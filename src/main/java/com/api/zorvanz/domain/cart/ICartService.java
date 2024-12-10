@@ -1,19 +1,21 @@
 package com.api.zorvanz.domain.cart;
 
 import com.api.zorvanz.domain.cartitem.CartItem;
+import com.api.zorvanz.domain.cartitem.CartItemData;
+import com.api.zorvanz.domain.cartitem.CartItemRegister;
 import com.api.zorvanz.domain.products.Product;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public interface ICartService {
-    
-    CartResponse createCart ( CartRegisterData cartRegisterData );
-    
-    BigDecimal getTotalAmount ( List <CartItem> cartItems );
-    
-    List <Long> getProductsbyId ( CartRegisterData data );
-    
-    List <CartItem> getCartItem ( CartRegisterData data, List<Product> products, Cart cart );
-    
+	CartResponse createCart ( CartRegisterData cartData );
+	
+	BigDecimal calculateTotalAmount ( List <CartItem> cartItems );
+
+	CartResponse getCartById ( Long id );
+
+	List<CartResponse> getCart ();
+
+	CartResponse getCartByCustomerId( Long customerId );
 }
