@@ -4,7 +4,5 @@ CREATE TABLE cart_item (
     unit_price DECIMAL(19, 4) NOT NULL,
     total_price DECIMAL(19, 4) NOT NULL,
     product_id BIGINT,
-    cart_id BIGINT,
-    FOREIGN KEY (product_id) REFERENCES product(id),
-    FOREIGN KEY (cart_id) REFERENCES cart(id)
+    FOREIGN KEY (product_id) REFERENCES product(id)
 );
