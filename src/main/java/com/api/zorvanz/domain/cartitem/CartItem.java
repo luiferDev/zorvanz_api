@@ -1,6 +1,7 @@
 package com.api.zorvanz.domain.cartitem;
 
 import com.api.zorvanz.domain.cart.Cart;
+import com.api.zorvanz.domain.customer.Customer;
 import com.api.zorvanz.domain.products.Product;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,6 +28,21 @@ public class CartItem {
     private Product product;
     
     @ManyToOne ( fetch = FetchType.LAZY )
+    @JoinColumn ( name = "customer_id" )
+    private Customer customer;
+    
+    @ManyToOne ( fetch = FetchType.LAZY )
     @JoinColumn ( name = "cart_id" )
     private Cart cart;
+
+    public CartItem( Long id, int quantity, Product product,
+                    Customer customer, BigDecimal unitPrice, BigDecimal totalPrice
+                    ) {
+        this.id = id;
+        this.quantity = quantity;
+        this.product = product;
+        this.customer = customer;
+        this.unitPrice = unitPrice;
+        this.totalPrice = totalPrice;
+    }
 }
