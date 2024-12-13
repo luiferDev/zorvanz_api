@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping ( "/api/products" )
@@ -50,9 +51,11 @@ public class ProductController {
     @PostMapping ( "/create-product" )
     @Transactional
     public ResponseEntity createProduct (
-            @RequestBody @Valid RegisterProductData registerProduct ) {
+            @RequestBody @Valid RegisterProductData registerProduct,
+            UriComponentsBuilder uriBuilder ) {
         var response = registerProductService.registerProduct ( registerProduct );
-        return ResponseEntity.ok ( response );
+        var URI = uriBuilder.path ( "/api/products/{id}" ).buildAndExpand ( response.isDone () ).toUri ();
+        return ResponseEntity.created ( URI ).body (response );
     }
 
     // TODO: Implementar método para actualizar un producto
