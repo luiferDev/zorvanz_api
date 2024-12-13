@@ -1,13 +1,18 @@
 package com.api.zorvanz.domain.orders;
 
+import com.api.zorvanz.domain.cart.CartData;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record OrderData(
         Long id,
         Long customerId,
         LocalDateTime date,
-        Double totalAmount,
-        Status status
+        BigDecimal totalAmount,
+        Status status,
+        Payment paymentMethod,
+        CartData cart
 ) {
     public OrderData(Orders order) {
         this(
@@ -15,7 +20,9 @@ public record OrderData(
                 order.getCustomer().getId(),
                 order.getDate(),
                 order.getTotalAmount(),
-                order.getStatus()
+                order.getStatus(),
+                order.getPaymentMethod(),
+                new CartData(order.getCart())
         );
     }
 }
