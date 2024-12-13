@@ -9,5 +9,5 @@ public interface IOrderService {
 	void generateInvoice(Orders order);
 	OrderData getOrderById(Long id);
 	List <OrderData> getAllOrders ();
-	void processPayment( String paymentContext, BigDecimal amount );
+	void processPayment( Payment paymentMethod, BigDecimal amount );
 }

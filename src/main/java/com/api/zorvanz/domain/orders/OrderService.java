@@ -3,6 +3,8 @@ package com.api.zorvanz.domain.orders;
 import com.api.zorvanz.domain.cart.Cart;
 import com.api.zorvanz.domain.cart.CartRepository;
 import com.api.zorvanz.domain.customer.Customer;
+import com.api.zorvanz.strategy.concrete.CashConcrete;
+import com.api.zorvanz.strategy.context.PaymentContext;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -60,13 +62,33 @@ public class OrderService implements IOrderService {
         // Generar la factura
         generateInvoice(order);
 
+        processPayment ( paymentMethod, totalAmount );
+
         // Retornar los datos de la orden
         return new OrderData(order);
     }
 
     // TODO: mejorar los metodos
     @Override
-    public void processPayment(String paymentContext, BigDecimal amount) {
+    public void processPayment( Payment paymentMethod, BigDecimal amount ) {
+        PaymentContext paymentContext = new PaymentContext();
+        switch ( paymentMethod ) {
+            case CASH:
+                paymentContext.setPaymentStrategy(new CashConcrete());
+                break;
+            case CREDIT_CARD:
+                // Lógica para procesar pago con tarjeta de crédito
+                break;
+            case DEBIT_CARD:
+                // Lógica para procesar pago con tarjeta de débito
+                break;
+            case PAYPAL:
+                // Lógica para procesar pago con PayPal
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported payment method: " + paymentMethod);
+        }
+        paymentContext.pay(amount);
     }
 
 
