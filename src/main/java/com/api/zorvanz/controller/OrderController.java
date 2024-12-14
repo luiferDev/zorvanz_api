@@ -6,10 +6,12 @@ import com.api.zorvanz.domain.orders.OrderService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -33,10 +35,11 @@ public class OrderController {
     }
     
     // todas las ordenes de compra
-    @GetMapping( "/all" )
-    public ResponseEntity<List<OrderData>> getAllOrders() {
+    @GetMapping("/all")
+    @Async("threadPoolTaskExecutor")
+    public CompletableFuture<ResponseEntity<List<OrderData>>> getAllOrders() {
         List<OrderData> orders = orderService.getAllOrders();
-        return ResponseEntity.ok(orders);
+        return CompletableFuture.completedFuture(ResponseEntity.ok(orders));
     }
 
 

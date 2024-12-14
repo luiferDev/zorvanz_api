@@ -12,8 +12,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping ( "/api/products" )
@@ -29,10 +32,15 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity <Page <ProductListData>> getProducts (
+    @Async("threadPoolTaskExecutor")
+    @org.springframework.transaction.annotation.Transactional (readOnly = true)
+    public CompletableFuture<ResponseEntity <Page <ProductListData>>>  getProducts (
             @PageableDefault ( page = 0, size = 8, sort = "popularity", direction = Sort.Direction.DESC )
             Pageable pagination ) {
-        return ResponseEntity.ok ( productRepository.findAll ( pagination ).map ( ProductListData :: new ) );
+        return CompletableFuture.completedFuture (
+                ResponseEntity.ok ( productRepository.findAll ( pagination )
+                        .map ( ProductListData :: new )
+                ) );
     }
 
     @GetMapping ( "/{id}" )

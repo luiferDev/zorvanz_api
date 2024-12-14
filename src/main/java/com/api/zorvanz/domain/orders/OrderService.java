@@ -5,7 +5,9 @@ import com.api.zorvanz.domain.cart.CartRepository;
 import com.api.zorvanz.domain.customer.Customer;
 import com.api.zorvanz.strategy.concrete.CashConcrete;
 import com.api.zorvanz.strategy.context.PaymentContext;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -70,6 +72,7 @@ public class OrderService implements IOrderService {
 
     // TODO: mejorar los metodos
     @Override
+    @Async("threadPoolTaskExecutor")
     public void processPayment( Payment paymentMethod, BigDecimal amount ) {
         PaymentContext paymentContext = new PaymentContext();
         switch ( paymentMethod ) {
@@ -94,11 +97,12 @@ public class OrderService implements IOrderService {
 
 
     @Override
+    @Async("threadPoolTaskExecutor")
     public void generateInvoice(Orders order) {
         // Aquí puedes implementar la lógica para generar una factura
         // Esto podría ser guardar la información en una tabla de facturas,
         // generar un PDF, enviar un correo electrónico, etc.
-        
+
         // Ejemplo sencillo:
         System.out.println("Factura generada para la orden ID: " + order.getId());
         System.out.println("Total: " + order.getTotalAmount());
@@ -113,8 +117,9 @@ public class OrderService implements IOrderService {
 
     //TODO: ordenes por cliente para solo obtener los pedidos de los clientes solo para el usuario que este registrado
     @Override
-    public List<OrderData> getAllOrders () {
-        // deberia poderse ver las ordenes por cliente
-        return ordersRepository.findAll().stream().map(OrderData::new).toList();
+    @Transactional(readOnly = true)
+    public List < OrderData > getAllOrders () {
+        // deberia poderse ver las órdenes por cliente
+        return  ordersRepository.findAll().stream().map(OrderData::new).toList();
     }
 }
