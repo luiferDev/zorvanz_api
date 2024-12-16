@@ -1,9 +1,6 @@
 package com.api.zorvanz.domain.cart;
 
 import com.api.zorvanz.domain.cartitem.CartItem;
-import com.api.zorvanz.domain.cartitem.CartItemData;
-import com.api.zorvanz.domain.cartitem.CartItemRegister;
-import com.api.zorvanz.domain.products.Product;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,5 +14,5 @@ public interface ICartService {
 
 	List<CartResponse> getCart ();
 
-	CartResponse getCartByCustomerId( Long customerId );
+	List < CartResponse > getCartByCustomerId( Long customerId );
 }

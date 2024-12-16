@@ -102,10 +102,11 @@ public class CartService implements ICartService {
 	}
 
 	@Override
-	public CartResponse getCartByCustomerId( Long customerId) {
+	public List < CartResponse > getCartByCustomerId( Long customerId) {
 		return cartRepository.findByCustomerId(customerId)
-				.map(CartResponse::new)
-				.orElseThrow(() -> new IllegalArgumentException("Cart not found"));
+				.stream ()
+				.map ( CartResponse::new )
+				.toList ();
 	}
 
 }

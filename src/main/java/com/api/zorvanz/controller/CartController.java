@@ -62,13 +62,13 @@ public class CartController {
 	}
 
 	@GetMapping ( "/customer-cart/{id}" )
-	public ResponseEntity<CartResponse> getCustomerCartById ( @PathVariable Long id ) {
+	public CompletableFuture < ResponseEntity< List< CartResponse>> > getCustomerCartById ( @PathVariable Long id ) {
 		var response = cartService.getCartByCustomerId(id);
 		if ( response == null ) {
-			return ResponseEntity.notFound ().build ();
+			return CompletableFuture.completedFuture ( ResponseEntity.notFound ().build () );
 		}
 
-		return ResponseEntity.ok ( response );
+		return  CompletableFuture.completedFuture ( ResponseEntity.ok ( response ) );
 	}
 	//TODO: implementar el método para actualizar un carrito
 	//@PutMapping ( "/{id}" )
