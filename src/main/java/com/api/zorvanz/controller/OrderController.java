@@ -44,9 +44,9 @@ public class OrderController {
 
 
     @GetMapping( "/{id}" )
-    public ResponseEntity<OrderData> getOrderById(@PathVariable Long id) {
+    public CompletableFuture<ResponseEntity<OrderData>> getOrderById(@PathVariable Long id) {
         OrderData order = orderService.getOrderById(id);
-        return ResponseEntity.ok(order);
+        return CompletableFuture.completedFuture ( ResponseEntity.ok(order) );
     }
     
 }
