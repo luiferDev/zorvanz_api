@@ -10,5 +10,12 @@ public record CartData(
         BigDecimal totalAmount,
         List <CartItemData> cartItems
 ) {
+	public CartData(Cart cart) {
+		this(
+				cart.getId(),
+				cart.getTotalAmount(),
+				cart.getCartItems().stream().map(CartItemData::new).toList()
+		);
+	}
 }
 

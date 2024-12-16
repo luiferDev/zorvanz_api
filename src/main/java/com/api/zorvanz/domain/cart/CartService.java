@@ -1,10 +1,13 @@
 package com.api.zorvanz.domain.cart;
 
-import com.api.zorvanz.domain.cartitem.*;
+import com.api.zorvanz.domain.cartitem.CartItem;
+import com.api.zorvanz.domain.cartitem.CartItemRegister;
+import com.api.zorvanz.domain.cartitem.CartItemRepository;
 import com.api.zorvanz.domain.customer.Customer;
 import com.api.zorvanz.domain.products.Product;
 import com.api.zorvanz.domain.products.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -18,7 +21,7 @@ public class CartService implements ICartService {
 	private final CartItemRepository cartItemRepository;
 	private final ProductRepository productRepository;
 
-	private CartService ( CartRepository cartRepository,
+	public CartService ( CartRepository cartRepository,
 	                      CartItemRepository cartItemRepository,
 						  ProductRepository productRepository){
 		this.cartRepository = cartRepository;
@@ -27,7 +30,7 @@ public class CartService implements ICartService {
 	}
 
 	@Override
-	public CartResponse createCart(CartRegisterData cartData) {
+	public CartResponse createCart( CartRegisterData cartData ) {
 		// get customer id
 		Long customerId = cartData.customerId();
 		if (customerId == null) {
@@ -93,6 +96,7 @@ public class CartService implements ICartService {
 	}
 
 	@Override
+	@Transactional (readOnly = true)
 	public List<CartResponse> getCart () {
 		return cartRepository.findAll ().stream ().map ( CartResponse::new ).toList ();
 	}

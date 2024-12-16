@@ -12,7 +12,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping ( "/api/products" )
@@ -28,10 +32,15 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity <Page <ProductListData>> getProducts (
+    @Async("threadPoolTaskExecutor")
+    @org.springframework.transaction.annotation.Transactional (readOnly = true)
+    public CompletableFuture<ResponseEntity <Page <ProductListData>>>  getProducts (
             @PageableDefault ( page = 0, size = 8, sort = "popularity", direction = Sort.Direction.DESC )
             Pageable pagination ) {
-        return ResponseEntity.ok ( productRepository.findAll ( pagination ).map ( ProductListData :: new ) );
+        return CompletableFuture.completedFuture (
+                ResponseEntity.ok ( productRepository.findAll ( pagination )
+                        .map ( ProductListData :: new )
+                ) );
     }
 
     @GetMapping ( "/{id}" )
@@ -50,9 +59,11 @@ public class ProductController {
     @PostMapping ( "/create-product" )
     @Transactional
     public ResponseEntity createProduct (
-            @RequestBody @Valid RegisterProductData registerProduct ) {
+            @RequestBody @Valid RegisterProductData registerProduct,
+            UriComponentsBuilder uriBuilder ) {
         var response = registerProductService.registerProduct ( registerProduct );
-        return ResponseEntity.ok ( response );
+        var URI = uriBuilder.path ( "/api/products/{id}" ).buildAndExpand ( response.isDone () ).toUri ();
+        return ResponseEntity.created ( URI ).body (response );
     }
 
     // TODO: Implementar método para actualizar un producto
