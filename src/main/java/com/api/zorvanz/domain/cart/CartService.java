@@ -89,6 +89,7 @@ public class CartService implements ICartService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public CartResponse getCartById ( Long id ) {
 		return cartRepository.findById ( id )
 				.map ( CartResponse::new )
@@ -102,6 +103,7 @@ public class CartService implements ICartService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List < CartResponse > getCartByCustomerId( Long customerId) {
 		return cartRepository.findByCustomerId(customerId)
 				.stream ()

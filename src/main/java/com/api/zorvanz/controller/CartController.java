@@ -41,13 +41,14 @@ public class CartController {
 	}
 
 	@GetMapping ( "/{id}" )
-	public ResponseEntity<CartResponse> getCartById ( @PathVariable Long id ) {
+	@Async("threadPoolTaskExecutor")
+	public CompletableFuture<ResponseEntity<CartResponse>> getCartById ( @PathVariable Long id ) {
 		var response = cartService.getCartById(id);
 		if ( response == null ) {
-			return ResponseEntity.notFound ().build ();
+			return CompletableFuture.completedFuture ( ResponseEntity.notFound ().build () );
 		}
 
-		return ResponseEntity.ok ( response );
+		return CompletableFuture.completedFuture ( ResponseEntity.ok ( response ) );
 	}
 
 	@GetMapping ( "/get-carts" )
@@ -62,6 +63,7 @@ public class CartController {
 	}
 
 	@GetMapping ( "/customer-cart/{id}" )
+	@Async("threadPoolTaskExecutor")
 	public CompletableFuture < ResponseEntity< List< CartResponse>> > getCustomerCartById ( @PathVariable Long id ) {
 		var response = cartService.getCartByCustomerId(id);
 		if ( response == null ) {
