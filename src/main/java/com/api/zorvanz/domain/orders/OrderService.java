@@ -24,7 +24,7 @@ public class OrderService implements IOrderService {
 		this.ordersRepository = ordersRepository;
 		this.cartRepository = cartRepository;
 	}
-    // deberia recibir el id del carrito y bajar toda la info del carrito
+    // debería recibir id del carrito y bajar toda la info del carrito
     @Override
     public OrderData createOrder(OrderRegister data) {
         // Validar el ID del carrito
@@ -46,6 +46,8 @@ public class OrderService implements IOrderService {
         if (totalAmount == null || totalAmount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Invalid cart total amount");
         }
+
+        // TODO: crear una manera para que se extraiga la cantidad de productos adquiridos por el cliente
 
         // Crear la orden
         Orders order = new Orders(
@@ -70,7 +72,7 @@ public class OrderService implements IOrderService {
         return new OrderData(order);
     }
 
-    // TODO: mejorar los metodos
+    // TODO: mejorar los métodos
     @Override
     @Async("threadPoolTaskExecutor")
     public void processPayment( Payment paymentMethod, BigDecimal amount ) {
@@ -119,7 +121,7 @@ public class OrderService implements IOrderService {
     @Override
     @Transactional(readOnly = true)
     public List < OrderData > getAllOrders () {
-        // deberia poderse ver las órdenes por cliente
+        // debería poderse ver las órdenes por cliente
         return  ordersRepository.findAll().stream().map(OrderData::new).toList();
     }
 }
