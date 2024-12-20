@@ -1,9 +1,6 @@
 package com.api.zorvanz.controller;
 
-import com.api.zorvanz.domain.products.ProductListData;
-import com.api.zorvanz.domain.products.ProductRepository;
-import com.api.zorvanz.domain.products.RegisterProductData;
-import com.api.zorvanz.domain.products.RegisterProductService;
+import com.api.zorvanz.domain.products.*;
 import com.api.zorvanz.infra.errors.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -68,7 +65,7 @@ public class ProductController {
 
     // TODO: Implementar método para actualizar un producto
     //@PutMapping ( "/update-product/{id}" )
-
+    // TODO: deleting logically
     @DeleteMapping ( "/delete-product/{id}" )
     @Transactional
     public ResponseEntity deleteProduct ( @PathVariable Long id ) {
@@ -83,4 +80,11 @@ public class ProductController {
     //TODO: Implementar método para buscar productos por nombre
     //@GetMapping ( "/search" )
     //TODO: actualizar producto
+    @PatchMapping("/update")
+    @Transactional
+    public CompletableFuture<ResponseEntity> updateProduct(@RequestBody @Valid UpdateProductDTO updateProduct) {
+        var product = productRepository.getReferenceById(updateProduct.id());
+        product.updateProduct(updateProduct);
+        return CompletableFuture.completedFuture ( ResponseEntity.ok(new ProductListData(product)) );
+    }
 }
