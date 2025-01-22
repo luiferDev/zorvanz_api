@@ -81,5 +81,31 @@ public class CartItemService {
 			throw new IllegalArgumentException ( "Quantity must be greater than zero" );
 		}
 	}
+
+	public CartItemData updateCartItem ( Long id, @Valid CartItemRegister cartRegister ) {
+		return cartItemRepository.findById(id)
+				.map(cartItem -> {
+					Product product = productRepository.findById(cartRegister.productId())
+							.orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+					int quantity = cartRegister.quantity();
+					if (quantity <= 0) {
+						throw new IllegalArgumentException("Invalid quantity");
+					}
+
+					BigDecimal productUnitPrice = product.getPrice();
+					BigDecimal totalPrice = productUnitPrice.multiply(BigDecimal.valueOf(quantity))
+							.setScale(2, RoundingMode.HALF_UP);
+
+					cartItem.setQuantity(quantity);
+					cartItem.setProduct(product);
+					cartItem.setUnitPrice(productUnitPrice);
+					cartItem.setTotalPrice(totalPrice);
+
+					cartItemRepository.save(cartItem);
+
+					return new CartItemData(cartItem);
+				})
+				.orElseThrow(() -> new IllegalArgumentException("Cart item not found"));
+	}
 }
-*/
