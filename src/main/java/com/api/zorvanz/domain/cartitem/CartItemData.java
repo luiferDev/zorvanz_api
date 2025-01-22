@@ -1,11 +1,11 @@
 package com.api.zorvanz.domain.cartitem;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 public record CartItemData(
 		Long id,
 		Long customerId,
+		Long cartId,
 		Long productId,
 		Integer quantity,
 		BigDecimal unitPrice,
@@ -16,6 +16,7 @@ public record CartItemData(
 				cartItem.getId(),
 				cartItem.getCustomer().getId(),
 				cartItem.getProduct().getId(),
+				cartItem.getCart ().getId(),
 				cartItem.getQuantity(),
 				cartItem.getUnitPrice(),
 				cartItem.getTotalPrice()
