@@ -4,6 +4,7 @@ import com.api.zorvanz.domain.cart.CartRegisterData;
 import com.api.zorvanz.domain.cart.CartResponse;
 import com.api.zorvanz.domain.cart.CartService;
 import com.api.zorvanz.domain.cartitem.CartItemRepository;
+import com.api.zorvanz.domain.cartitem.CartItemService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
@@ -18,11 +19,14 @@ import java.util.concurrent.CompletableFuture;
 @RequestMapping ( "/api/cart" )
 public class CartController {
 	private final CartItemRepository cartItemRepository;
+	private final CartItemService cartItemService;
 	private final CartService cartService;
 	
 	public CartController ( CartItemRepository cartItemRepository,
+	                        CartItemService cartItemService,
 	                        CartService cartService ) {
 		this.cartItemRepository = cartItemRepository;
+		this.cartItemService = cartItemService;
 		this.cartService = cartService;
 	}
 	
