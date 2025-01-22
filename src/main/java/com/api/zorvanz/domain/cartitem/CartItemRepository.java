@@ -20,4 +20,8 @@ public interface CartItemRepository extends JpaRepository <CartItem, Long> {
 	Optional <Customer> findByCustomerId ( @Param ( "customerId" ) @NotNull Long customerId );
 
 	List <CartItem> findAllByCustomerId ( Long customerId );
+
+	boolean existsByCustomerIdAndProductId ( Long id, Long id1 );
+
+	Optional < Cart > findByCartId ( @NotNull( message = "Campo \"cart id\" es requerido" ) Long aLong );
 }
