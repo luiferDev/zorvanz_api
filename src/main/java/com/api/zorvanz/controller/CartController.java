@@ -78,8 +78,20 @@ public class CartController {
 	}
 	//TODO: implementar el método para actualizar un carrito
 	//@PutMapping ( "/{id}" )
+	//TODO: agregar item al carrito
+	@PatchMapping( "/add-item" )
+	@Transactional
+	public ResponseEntity<CartResponse> addItemToCart(
+			@RequestBody @Valid CartRegisterData cartRegister,
+			UriComponentsBuilder uriBuilder
+	) {
+		var cart = cartService.createCart(cartRegister);
+		var uri = uriBuilder.path("/api/cart/{id}")
+				.buildAndExpand(cart.id()).toUri();
+		return ResponseEntity.created(uri).body(cart);
+	}
+
 	//TODO: implementar el método para agregar un item al carrito
-	//@PostMapping ( "/{id}" )
 	//TODO: implementar el método para eliminar un carrito
 	//@DeleteMapping ( "/{id}" )
 }
