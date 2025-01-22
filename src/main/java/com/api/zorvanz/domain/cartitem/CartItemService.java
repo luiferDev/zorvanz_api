@@ -1,14 +1,15 @@
 package com.api.zorvanz.domain.cartitem;
 
+import com.api.zorvanz.domain.cart.Cart;
 import com.api.zorvanz.domain.customer.Customer;
 import com.api.zorvanz.domain.products.Product;
 import com.api.zorvanz.domain.products.ProductRepository;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Optional;
-/*
+
 @Service
 public class CartItemService {
 	// el cart item debe recibir un tipo de producto y la cantidad que elija el cliente
@@ -24,8 +25,8 @@ public class CartItemService {
 	
 	public CartItemData addItemToCart ( CartItemRegister data ) {
 		// get customer
-		//Customer customer = cartItemRepository.findByCustomerId ( data.customerId () )
-		//		.orElseThrow (() -> new IllegalArgumentException ("Customer not found"));
+		Customer customer = cartItemRepository.findByCustomerId ( data.customerId () )
+				.orElseThrow (() -> new IllegalArgumentException ("Customer not found"));
 		// get product
 		Product product = productRepository.findById ( data.productId () )
 				.orElseThrow (() -> new IllegalArgumentException ( "Product not found" ));
@@ -34,14 +35,20 @@ public class CartItemService {
 		if ( quantity <= 0 ) {
 			throw new IllegalArgumentException ( "Invalid quantity" );
 		}
+
+		Cart cart = cartItemRepository.findByCartId ( data.cartId () )
+				.orElseThrow (() -> new IllegalArgumentException ( "Cart not found" ));
+
+		if ( cartItemRepository.existsByCustomerIdAndProductId ( customer.getId (), product.getId () ) ) {
+			throw new IllegalArgumentException ( "Product already exists in cart" );
+		}
 		//obtener el precio de cada producto
 		BigDecimal productUnitPrice = product.getPrice ();
 		// calcular el total
 		BigDecimal cartItemTotalPrice = calculateCartItemTotal ( productUnitPrice, quantity );
 		// regresa una lista de un Map de productos y la cantidad
-		//CartItem cartItem = new CartItem ( null, quantity, product,
-		//		customer, productUnitPrice, cartItemTotalPrice );
-		/*
+		CartItem cartItem = new CartItem ( null, quantity, product,
+				customer, productUnitPrice, cartItemTotalPrice, cart );
 		cartItemRepository.save ( cartItem );
 		
 		Long id = cartItem.getId ();
@@ -50,8 +57,9 @@ public class CartItemService {
 		Long customerId = cartItem.getCustomer ().getId ();
 		BigDecimal unitPriceData = cartItem.getUnitPrice ();
 		BigDecimal totalPriceData = cartItem.getTotalPrice ();
+		Long cartId = cartItem.getCart ().getId ();
 		
-		return new CartItemData ( id, customerId, productId,
+		return new CartItemData ( id, customerId, cartId, productId,
 				quantityData, unitPriceData, totalPriceData );
 	}
 	
