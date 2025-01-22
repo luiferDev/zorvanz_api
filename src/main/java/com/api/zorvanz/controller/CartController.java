@@ -76,9 +76,8 @@ public class CartController {
 
 		return  CompletableFuture.completedFuture ( ResponseEntity.ok ( response ) );
 	}
-	//TODO: implementar el método para actualizar un carrito
-	//@PutMapping ( "/{id}" )
 	//TODO: agregar item al carrito
+	// corregir ya que usa create cart en lugar de updateCart
 	@PatchMapping( "/add-item" )
 	@Transactional
 	public ResponseEntity<CartResponse> addItemToCart(
