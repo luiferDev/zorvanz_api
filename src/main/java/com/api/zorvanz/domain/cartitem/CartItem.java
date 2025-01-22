@@ -36,8 +36,21 @@ public class CartItem {
     private Cart cart;
 
     public CartItem( Long id, int quantity, Product product,
-                    Customer customer, BigDecimal unitPrice, BigDecimal totalPrice
+                    Customer customer, BigDecimal unitPrice, BigDecimal totalPrice,
+                    Cart cart
                     ) {
+        this.id = id;
+        this.quantity = quantity;
+        this.product = product;
+        this.customer = customer;
+        this.cart = cart;
+        this.unitPrice = unitPrice;
+        this.totalPrice = totalPrice;
+    }
+
+    public CartItem( Long id, int quantity, Product product,
+                     Customer customer, BigDecimal unitPrice, BigDecimal totalPrice
+    ) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
