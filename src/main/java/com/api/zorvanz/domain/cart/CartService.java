@@ -6,6 +6,7 @@ import com.api.zorvanz.domain.cartitem.CartItemRepository;
 import com.api.zorvanz.domain.customer.Customer;
 import com.api.zorvanz.domain.products.Product;
 import com.api.zorvanz.domain.products.ProductRepository;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,28 +46,9 @@ public class CartService implements ICartService {
 		Customer customer = cartItemRepository.findByCustomerId(customerId)
 				.orElseThrow(() -> new IllegalArgumentException("Customer not found"));
 		// extract cart item for the products quantity unit price total price
-		List<CartItem> cartItems = itemRegisters.stream().map(item -> {
-			// Obtener el producto
-			Product product = productRepository.findById(item.productId())
-					.orElseThrow(() -> new IllegalArgumentException("Product not found"));
-
-			// Validar cantidad
-			int quantity = item.quantity();
-			if (quantity <= 0) {
-				throw new IllegalArgumentException("Invalid quantity");
-			}
-
-			// Calcular precio total
-			BigDecimal productUnitPrice = product.getPrice();
-			BigDecimal totalPrice = productUnitPrice.multiply(BigDecimal.valueOf(quantity))
-					.setScale(2, RoundingMode.HALF_UP);
-
-			return new CartItem(null, quantity, product, customer, productUnitPrice, totalPrice);
-		}).toList();
-
+		List<CartItem> cartItems = createCartItems ( itemRegisters, customer );
 		// total amount
-		BigDecimal totalAmount = calculateTotalAmount(cartItems);
-
+		BigDecimal totalAmount = calculateTotalAmount( cartItems );
 		// create cart
 		Cart cart = new Cart(null, totalAmount, customer, cartItems );
 		cartRepository.save(cart);
@@ -77,6 +59,29 @@ public class CartService implements ICartService {
 
 		return new CartResponse(cart);
 	}
+
+
+	private List<CartItem> createCartItems(List<CartItemRegister> itemRegisters, Customer customer) {
+			return itemRegisters.stream().map(item -> {
+				// Obtener el producto
+				Product product = productRepository.findById(item.productId())
+						.orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+				// Validar cantidad
+				int quantity = item.quantity();
+				if (quantity <= 0) {
+					throw new IllegalArgumentException("Invalid quantity");
+				}
+
+				// Calcular precio total
+				BigDecimal productUnitPrice = product.getPrice();
+				BigDecimal totalPrice = productUnitPrice.multiply(BigDecimal.valueOf(quantity))
+						.setScale(2, RoundingMode.HALF_UP);
+
+				return new CartItem(null, quantity, product, customer, productUnitPrice, totalPrice);
+			}).toList();
+	}
+
 
 
 	@Override
@@ -110,6 +115,5 @@ public class CartService implements ICartService {
 				.map ( CartResponse::new )
 				.toList ();
 	}
-
 }
 
