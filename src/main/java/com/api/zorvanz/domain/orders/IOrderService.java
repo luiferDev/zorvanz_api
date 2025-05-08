@@ -9,10 +9,13 @@ import java.util.List;
 
 @EnableAsync
 public interface IOrderService {
-	OrderData createOrder( OrderRegister data );
-	@Async("threadPoolTaskExecutor")
-	void generateInvoice(Orders order);
-	OrderData getOrderById(Long id);
-	List < OrderData > getAllOrders ();
-	void processPayment( Payment paymentMethod, BigDecimal amount );
+    OrderData createOrder ( OrderRegister data );
+
+    void generateInvoice ( Orders order );
+
+    OrderData getOrderById ( Long id );
+
+    List < OrderData > getAllOrders ();
+
+    void processPayment ( Payment paymentMethod, BigDecimal amount );
 }

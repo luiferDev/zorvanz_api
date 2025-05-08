@@ -19,11 +19,11 @@ public class OrderService implements IOrderService {
     private final OrdersRepository ordersRepository;
     private final CartRepository cartRepository;
 
-	public OrderService ( OrdersRepository ordersRepository,
-	                      CartRepository cartRepository ) {
-		this.ordersRepository = ordersRepository;
-		this.cartRepository = cartRepository;
-	}
+    public OrderService ( OrdersRepository ordersRepository,
+                          CartRepository cartRepository ) {
+        this.ordersRepository = ordersRepository;
+        this.cartRepository = cartRepository;
+    }
     // debería recibir id del carrito y bajar toda la info del carrito
     @Override
     public OrderData createOrder(OrderRegister data) {
@@ -74,7 +74,6 @@ public class OrderService implements IOrderService {
 
     // TODO: mejorar los métodos
     @Override
-    @Async("threadPoolTaskExecutor")
     public void processPayment( Payment paymentMethod, BigDecimal amount ) {
         PaymentContext paymentContext = new PaymentContext();
         switch ( paymentMethod ) {
@@ -99,7 +98,6 @@ public class OrderService implements IOrderService {
 
 
     @Override
-    @Async("threadPoolTaskExecutor")
     public void generateInvoice(Orders order) {
         // Aquí puedes implementar la lógica para generar una factura
         // Esto podría ser guardar la información en una tabla de facturas,

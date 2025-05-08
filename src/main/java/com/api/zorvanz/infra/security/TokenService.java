@@ -16,11 +16,10 @@ import java.time.ZoneOffset;
 @Service
 public class TokenService {
     private static final long ACCESS_TOKEN_EXPIRATION_HOURS = 2;
-    private static final long REFRESH_TOKEN_EXPIRATION_HOURS = 24;
-    //@Value("${api.security.secret}")
-    @Value ( "123456" )
+    private static final long REFRESH_TOKEN_EXPIRATION_HOURS = 48;
+    @Value ( "${api.security.secret}" )
     private String apiSecret;
-    @Value ( "123456" )
+    @Value ( "${api.security.secret}" )
     private String refreshSecret;
 
     public String generarAccessToken ( User usuario ) {
@@ -59,25 +58,25 @@ public class TokenService {
         return getSubject ( token );
     }
 
-    String getSubject ( String token ) {
+    public String getSubject ( String token ) {
         if ( token == null ) {
             throw new RuntimeException ();
         }
-        DecodedJWT verifier = null;
+        DecodedJWT decoded;
         try {
-            Algorithm algorithm = Algorithm.HMAC256 ( apiSecret ); // validando firma
-            verifier = JWT.require ( algorithm )
+            Algorithm algorithm = Algorithm.HMAC256 ( apiSecret );
+            decoded = JWT.require ( algorithm )
                     .withIssuer ( "zorvanz" )
                     .build ()
                     .verify ( token );
-            verifier.getSubject ();
         } catch ( JWTVerificationException exception ) {
-            System.out.println ( exception );
+            System.out.println ( "Token inválido: " + exception.getMessage () );
+            throw new RuntimeException ( "Token inválido", exception );
         }
-        if ( verifier.getSubject () == null ) {
+        if ( decoded.getSubject () == null ) {
             throw new RuntimeException ( "Verifier invalido" );
         }
-        return verifier.getSubject ();
+        return decoded.getSubject ();
     }
 
     private Instant generarFechaExpiracionAccess () {

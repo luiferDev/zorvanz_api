@@ -20,7 +20,7 @@ public class UserService {
     }
 
     @Async
-    public CompletableFuture < String > registerUser ( RegistrationRequest request ) {
+    public CompletableFuture < UserResponse > registerUser ( RegistrationRequest request ) {
         if ( userRepository.existsByUserName ( request.username () ) ) {
             throw new RuntimeException ( "Username is already taken" );
         }
@@ -31,11 +31,20 @@ public class UserService {
         User user = new User ();
         user.setUserName ( request.username () );
         user.setEmail ( request.email () );
+        user.setName ( request.name () );
+        user.setLastName ( request.lastName () );
         user.setPassword ( passwordEncoder.encode ( request.password () ) );
+        user.setRole ( String.valueOf ( Role.USER ) );
         userRepository.save ( user );
 
-        String token = tokenService.generarAccessToken ( user );
-        return CompletableFuture.completedFuture ( token );
+        UserResponse response = new UserResponse (
+                user.getUsername (),
+                user.getEmail (),
+                user.getName (),
+                user.getLastName ()
+        );
+
+        return CompletableFuture.completedFuture ( response );
     }
 
     @Async

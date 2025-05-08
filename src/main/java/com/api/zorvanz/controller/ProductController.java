@@ -28,10 +28,11 @@ public class ProductController {
         this.registerProductService = registerProductService;
     }
 
+
     @GetMapping
-    @Async("threadPoolTaskExecutor")
-    @org.springframework.transaction.annotation.Transactional (readOnly = true)
-    public CompletableFuture<ResponseEntity <Page <ProductListData>>>  getProducts (
+    @Async ( "threadPoolTaskExecutor" )
+    @org.springframework.transaction.annotation.Transactional ( readOnly = true )
+    public CompletableFuture < ResponseEntity < Page < ProductListData > > > getProducts (
             @PageableDefault ( page = 0, size = 8, sort = "popularity", direction = Sort.Direction.DESC )
             Pageable pagination ) {
         return CompletableFuture.completedFuture (
@@ -41,7 +42,7 @@ public class ProductController {
     }
 
     @GetMapping ( "/{id}" )
-    public ResponseEntity <ProductListData> getProductById ( @PathVariable Long id ) {
+    public ResponseEntity < ProductListData > getProductById ( @PathVariable Long id ) {
         try {
             return productRepository.findById ( id ) // import java.util.Optional
                     .map ( product -> ResponseEntity.ok ( new ProductListData ( product ) ) )
@@ -60,7 +61,7 @@ public class ProductController {
             UriComponentsBuilder uriBuilder ) {
         var response = registerProductService.registerProduct ( registerProduct );
         var URI = uriBuilder.path ( "/api/products/{id}" ).buildAndExpand ( response.isDone () ).toUri ();
-        return ResponseEntity.created ( URI ).body (response );
+        return ResponseEntity.created ( URI ).body ( response );
     }
 
     // TODO: Implementar método para actualizar un producto
@@ -80,11 +81,13 @@ public class ProductController {
     //TODO: Implementar método para buscar productos por nombre
     //@GetMapping ( "/search" )
     //TODO: actualizar producto
-    @PatchMapping("/update")
+    @PatchMapping ( "/update" )
     @Transactional
-    public CompletableFuture<ResponseEntity> updateProduct(@RequestBody @Valid UpdateProductDTO updateProduct) {
-        var product = productRepository.getReferenceById(updateProduct.id());
-        product.updateProduct(updateProduct);
-        return CompletableFuture.completedFuture ( ResponseEntity.ok(new ProductListData(product)) );
+    public ResponseEntity < ProductListData > updateProduct (
+            @RequestBody @Valid UpdateProductDTO updateProduct ) {
+        var product = productRepository.getReferenceById ( updateProduct.id () );
+        product.updateProduct ( updateProduct );
+        return ResponseEntity.ok ( new ProductListData ( product ) );
     }
+
 }
