@@ -1,0 +1,20 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ZorvanzApplication" type="Application" factoryName="Application" nameIsGenerated="true">
+    <envs>
+      <env name="DB_CONNECTION" value="jdbc:postgresql://localhost:5432/zorvanz" />
+      <env name="DB_PASSWORD" value="123456" />
+      <env name="DB_USER" value="postgres" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="com.api.zorvanz.ZorvanzApplication" />
+    <module name="zorvanz" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.api.zorvanz.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
