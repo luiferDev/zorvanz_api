@@ -3,6 +3,7 @@ package com.api.zorvanz.infra.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -17,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableAsync
 @EnableMethodSecurity ( securedEnabled = true )
 public class SecurityConfigurations {
 
@@ -36,6 +38,7 @@ public class SecurityConfigurations {
                         authorizeRequests
                                 .requestMatchers ( HttpMethod.POST, "/api/auth/login" ).permitAll ()
                                 .requestMatchers ( HttpMethod.POST, "/api/auth/register" ).permitAll ()
+                                //.requestMatchers ( "/api/products/create-product" ).hasRole ( "ADMIN" )
                                 .requestMatchers ( HttpMethod.POST, "/api/auth/refresh" ).permitAll ()
                                 .requestMatchers ( HttpMethod.GET, "/api/products/search" ).permitAll ()
                                 .requestMatchers ( HttpMethod.GET, "/api/products" ).permitAll ()
@@ -61,5 +64,4 @@ public class SecurityConfigurations {
         return new BCryptPasswordEncoder ();
     }
 
-    //TODO: create a registry method and auth controller
 }
