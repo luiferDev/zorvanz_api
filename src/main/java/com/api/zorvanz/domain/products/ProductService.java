@@ -12,10 +12,14 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private CategoriesRepository categoriesRepository;
+    private final ProductRepository productRepository;
+    private final CategoriesRepository categoriesRepository;
+
+    public ProductService ( ProductRepository productRepository,
+                            CategoriesRepository categoriesRepository ) {
+        this.productRepository = productRepository;
+        this.categoriesRepository = categoriesRepository;
+    }
 
     @Async ( "threadPoolTaskExecutor" )
     @Transactional
