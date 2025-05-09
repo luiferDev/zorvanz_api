@@ -8,24 +8,31 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+
+import static org.springframework.data.web.config.EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO;
 
 @RestController
 @RequestMapping ( "/api/products" )
+@EnableSpringDataWebSupport ( pageSerializationMode = VIA_DTO )
 public class ProductController {
 
     private final ProductRepository productRepository;
-    private final RegisterProductService registerProductService;
+    private final ProductService productService;
 
     public ProductController ( ProductRepository productRepository,
-                               RegisterProductService registerProductService ) {
+                               ProductService productService ) {
         this.productRepository = productRepository;
-        this.registerProductService = registerProductService;
+        this.productService = productService;
     }
 
 

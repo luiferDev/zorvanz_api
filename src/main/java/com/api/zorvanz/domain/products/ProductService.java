@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-public class RegisterProductService {
+public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
