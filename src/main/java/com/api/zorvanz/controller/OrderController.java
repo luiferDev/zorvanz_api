@@ -7,7 +7,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -43,7 +42,7 @@ public class OrderController {
     /**
      * Obtiene todas las órdenes, requiere ROLE_USER.
      */
-    @Secured ( "ROLE_USER" )
+    //@PreAuthorize ( "hasRole('USER')" )
     @GetMapping ( "/all" )
     public ResponseEntity < List < OrderData > > getAllOrders () {
         List < OrderData > orders = orderService.getAllOrders ();
@@ -53,7 +52,7 @@ public class OrderController {
     /**
      * Obtiene una orden por su ID, requiere ROLE_USER.
      */
-    @Secured ( "ROLE_USER" )
+    //@Secured ( "ROLE_USER" )
     @GetMapping ( "/{id}" )
     public ResponseEntity < OrderData > getOrderById ( @PathVariable Long id ) {
         try {
