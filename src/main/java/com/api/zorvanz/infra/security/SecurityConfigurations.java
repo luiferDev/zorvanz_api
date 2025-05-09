@@ -37,6 +37,7 @@ public class SecurityConfigurations {
                                 .requestMatchers ( HttpMethod.POST, "/api/auth/login" ).permitAll ()
                                 .requestMatchers ( HttpMethod.POST, "/api/auth/register" ).permitAll ()
                                 .requestMatchers ( HttpMethod.POST, "/api/auth/refresh" ).permitAll ()
+                                .requestMatchers ( HttpMethod.GET, "/api/products/search" ).permitAll ()
                                 .requestMatchers ( HttpMethod.GET, "/api/products" ).permitAll ()
                                 .requestMatchers ( HttpMethod.GET, "/api/products/{id}" ).permitAll ()
 //                                .requestMatchers(HttpMethod.DELETE, "/medicos").hasRole("ADMIN") /// para eliminar necesita el perfirl admin
