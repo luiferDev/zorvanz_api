@@ -54,6 +54,7 @@ public class ProductController {
         }
     }
 
+    //@PreAuthorize ( "hasRole('ADMIN')" )
     @PostMapping ( "/create-product" )
     @Transactional
     public ResponseEntity < ? > createProduct (
@@ -70,9 +71,7 @@ public class ProductController {
         }
     }
 
-    // TODO: Implementar método para actualizar un producto
-    //@PutMapping ( "/update-product/{id}" )
-    // TODO: deleting logically
+    //@PreAuthorize ( "hasRole('ADMIN')" )
     @DeleteMapping ( "/delete-product/{id}" )
     @Transactional
     public ResponseEntity deleteProduct ( @PathVariable Long id ) {
