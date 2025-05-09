@@ -2,11 +2,11 @@ package com.api.zorvanz.domain.products;
 
 import com.api.zorvanz.domain.category.CategoriesRepository;
 import jakarta.validation.ValidationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -23,13 +23,13 @@ public class ProductService {
 
     @Async ( "threadPoolTaskExecutor" )
     @Transactional
-    public CompletableFuture <ProductListData> registerProduct ( RegisterProductData data ) {
+    public CompletableFuture < ProductListData > registerProduct ( RegisterProductData data ) {
 
         if ( productRepository.existsByName ( data.name () ) ) {
             throw new ValidationException ( "Nombre de Producto existente" );
         }
 
-        if ( !categoriesRepository.existsById ( data.categoryId () )
+        if ( ! categoriesRepository.existsById ( data.categoryId () )
                 || categoriesRepository.findById ( data.categoryId () ).isEmpty () ) {
             throw new ValidationException ( "Categoria no existente" );
         }
@@ -49,4 +49,20 @@ public class ProductService {
 
         return CompletableFuture.completedFuture ( productList );
     }
+
+    public List < ProductResponse > searchProduct ( String name ) {
+        return productRepository.findByNameStartingWithIgnoreCase ( name )
+                .stream ()
+                .map ( p -> new ProductResponse (
+                                p.getId (),
+                                p.getName (),
+                                p.getDescription (),
+                                p.getCategory (),
+                                p.getPrice (),
+                                p.getImageUrl ()
+                        )
+                )
+                .toList ();
+    }
+
 }
