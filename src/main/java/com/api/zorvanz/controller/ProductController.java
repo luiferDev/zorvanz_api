@@ -56,12 +56,18 @@ public class ProductController {
 
     @PostMapping ( "/create-product" )
     @Transactional
-    public ResponseEntity createProduct (
+    public ResponseEntity < ? > createProduct (
             @RequestBody @Valid RegisterProductData registerProduct,
             UriComponentsBuilder uriBuilder ) {
-        var response = registerProductService.registerProduct ( registerProduct );
-        var URI = uriBuilder.path ( "/api/products/{id}" ).buildAndExpand ( response.isDone () ).toUri ();
-        return ResponseEntity.created ( URI ).body ( response );
+        try {
+            var response = productService.registerProduct ( registerProduct );
+            var uri = uriBuilder.path ( "/api/products/{id}" ).buildAndExpand ( response.isDone () ).toUri ();
+            return ResponseEntity.created ( uri ).body ( response );
+        } catch ( Exception e ) {
+            Map < String, String > error = Map.of ( "error", "Error al crear el producto",
+                    "details", e.getMessage () );
+            return ResponseEntity.status ( HttpStatus.INTERNAL_SERVER_ERROR ).body ( error );
+        }
     }
 
     // TODO: Implementar método para actualizar un producto
@@ -78,9 +84,17 @@ public class ProductController {
                 .orElse ( ResponseEntity.notFound ().build () );
     }
 
-    //TODO: Implementar método para buscar productos por nombre
-    //@GetMapping ( "/search" )
-    //TODO: actualizar producto
+    @GetMapping ( "/search" )
+    public ResponseEntity < List < ProductResponse > > searchProduct ( @RequestParam String name ) {
+        try {
+            List < ProductResponse > products = productService.searchProduct ( name );
+            return ResponseEntity.ok ( products );
+        } catch ( Exception e ) {
+            return ResponseEntity.notFound ().build ();
+        }
+    }
+
+
     @PatchMapping ( "/update" )
     @Transactional
     public ResponseEntity < ProductListData > updateProduct (
