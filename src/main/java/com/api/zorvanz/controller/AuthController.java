@@ -72,14 +72,30 @@ public class AuthController {
 
     @PostMapping ( "/login" )
     public ResponseEntity < AuthResponse > autenticarUsuario ( @RequestBody @Valid DatosAutenticacionUsuario datosAutenticacionUsuario ) {
-        Authentication authToken = new UsernamePasswordAuthenticationToken (
-                datosAutenticacionUsuario.username (), datosAutenticacionUsuario.password () );
-        var usuarioAutenticado = authenticationManager.authenticate ( authToken );
-
-        var accessToken = tokenService.generarAccessToken ( ( User ) usuarioAutenticado.getPrincipal () );
-        var refreshToken = tokenService.generarRefreshToken ( ( User ) usuarioAutenticado.getPrincipal () );
-
-        return ResponseEntity.ok ( new AuthResponse ( accessToken, refreshToken, "Bearer" ) );
+        try {
+            // Create authentication token with username and password
+            Authentication authToken = new UsernamePasswordAuthenticationToken(
+                    datosAutenticacionUsuario.username(), datosAutenticacionUsuario.password());
+            
+            // Authenticate the user
+            var usuarioAutenticado = authenticationManager.authenticate(authToken);
+            
+            // Get the authenticated user
+            User user = (User) usuarioAutenticado.getPrincipal();
+            
+            // Generate tokens
+            var accessToken = tokenService.generarAccessToken(user);
+            var refreshToken = tokenService.generarRefreshToken(user);
+            
+            // Return response with tokens and user role
+            return ResponseEntity.ok(
+                    new AuthResponse(
+                            accessToken, refreshToken, "Bearer", user.getRole() ) );
+        } catch (Exception e) {
+            // Log the error
+            System.out.println("Authentication error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
 }
