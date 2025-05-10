@@ -39,7 +39,22 @@ public class AuthController {
                     return ResponseEntity.badRequest ().build ();
                 } );
     }
-
+    
+    /**
+     * Endpoint for registering admin users.
+     * Only existing admins can create new admin users.
+     */
+    @PostMapping ( "/register-admin" )
+    @Secured("ROLE_ADMIN")
+    @Async ( "threadPoolTaskExecutor" )
+    public CompletableFuture < ResponseEntity < UserResponse > > registerAdmin (
+            @Valid @RequestBody RegistrationRequest req ) {
+        return userService.registerAdmin ( req )
+                .thenApply ( user -> ResponseEntity.ok ().body ( user ) )
+                .exceptionally ( ex -> {
+                    return ResponseEntity.badRequest ().build ();
+                } );
+    }
 
     @PostMapping ( "/refresh" )
     @Async ( "threadPoolTaskExecutor" )
