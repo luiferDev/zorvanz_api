@@ -38,13 +38,14 @@ public class SecurityConfigurations {
                         authorizeRequests
                                 .requestMatchers ( HttpMethod.POST, "/api/auth/login" ).permitAll ()
                                 .requestMatchers ( HttpMethod.POST, "/api/auth/register" ).permitAll ()
-                                //.requestMatchers ( "/api/products/create-product" ).hasRole ( "ADMIN" )
+                                .requestMatchers ( HttpMethod.POST, "/api/auth/register-admin" ).hasRole ( "ADMIN" )
+                                .requestMatchers ( HttpMethod.POST, "/api/products/create-product" ).hasRole ( "ADMIN" )
                                 .requestMatchers ( HttpMethod.POST, "/api/auth/refresh" ).permitAll ()
                                 .requestMatchers ( HttpMethod.GET, "/api/products/search" ).permitAll ()
                                 .requestMatchers ( HttpMethod.GET, "/api/products" ).permitAll ()
                                 .requestMatchers ( HttpMethod.GET, "/api/products/{id}" ).permitAll ()
-//                                .requestMatchers(HttpMethod.DELETE, "/medicos").hasRole("ADMIN") /// para eliminar necesita el perfirl admin
-//                                .requestMatchers(HttpMethod.DELETE, "/pacientes").hasRole("ADMIN")
+                                //.requestMatchers(HttpMethod.DELETE, "/medicos").hasRole("ADMIN")
+                                //.requestMatchers(HttpMethod.DELETE, "/pacientes").hasRole("ADMIN")
                                 .requestMatchers ( "/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**" )
                                 .permitAll ()
                                 .anyRequest ().authenticated () )
