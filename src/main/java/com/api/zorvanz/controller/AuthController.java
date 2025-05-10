@@ -5,8 +5,10 @@ import com.api.zorvanz.infra.security.AuthResponse;
 import com.api.zorvanz.infra.security.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,7 +29,6 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
 
-    // TODO: arreglar el register y el refresh
     @PostMapping ( "/register" )
     @Async ( "threadPoolTaskExecutor" )
     public CompletableFuture < ResponseEntity < UserResponse > > register (
@@ -97,5 +98,4 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
-
 }
