@@ -26,7 +26,9 @@ public class User implements UserDetails {
     private String password;
     private String userName;
     private String email;
-    private String role;
+
+    @Enumerated ( EnumType.STRING )
+    private Role role;
 
     @Override
     public Collection < ? extends GrantedAuthority > getAuthorities () {
