@@ -61,8 +61,12 @@ public class AuthController {
     public CompletableFuture < ResponseEntity < AuthResponse > > refresh (
             @RequestParam String refreshToken ) {
         return userService.refreshAccessToken ( refreshToken )
-                .thenApply ( access -> ResponseEntity
-                        .ok ( new AuthResponse ( access, refreshToken, "Bearer" ) ) )
+                .thenApply ( accessTokenInfo -> {
+                    String accessToken = accessTokenInfo.getLeft();
+                    Role role = accessTokenInfo.getRight();
+                    return ResponseEntity.ok(
+                            new AuthResponse(accessToken, refreshToken, "Bearer", role ) );
+                })
                 .exceptionally ( ex -> ResponseEntity.badRequest ().build () );
     }
 
