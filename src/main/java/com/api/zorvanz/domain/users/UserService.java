@@ -48,7 +48,37 @@ public class UserService {
     }
 
     @Async
-    public CompletableFuture < String > refreshAccessToken ( String refreshToken ) {
+    public CompletableFuture < UserResponse > registerAdmin ( RegistrationRequest request ) {
+        if ( userRepository.existsByUserName ( request.username () ) ) {
+            throw new RuntimeException ( "Username is already taken" );
+        }
+        if ( userRepository.existsByEmail ( request.email () ) ) {
+            throw new RuntimeException ( "Email is already in use" );
+        }
+
+        // Create an admin user with ADMIN role
+        User admin = User.createAdmin (
+                request.name (),
+                request.lastName (),
+                passwordEncoder.encode ( request.password () ),
+                request.username (),
+                request.email ()
+        );
+
+        userRepository.save ( admin );
+
+        UserResponse response = new UserResponse (
+                admin.getUsername (),
+                admin.getEmail (),
+                admin.getName (),
+                admin.getLastName ()
+        );
+
+        return CompletableFuture.completedFuture ( response );
+    }
+
+    @Async
+    public CompletableFuture < Pair < String, Role > > refreshAccessToken ( String refreshToken ) {
         String username = tokenService.getSubjectFromRefreshToken ( refreshToken );
         String newAccess = tokenService.generarRefreshToken (
                 userRepository.findUserName ( username )
