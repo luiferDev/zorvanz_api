@@ -28,13 +28,15 @@ public class UserService {
             throw new RuntimeException ( "Email is already in use" );
         }
 
-        User user = new User ();
-        user.setUserName ( request.username () );
-        user.setEmail ( request.email () );
-        user.setName ( request.name () );
-        user.setLastName ( request.lastName () );
-        user.setPassword ( passwordEncoder.encode ( request.password () ) );
-        user.setRole ( String.valueOf ( Role.USER ) );
+        // Create a regular user with USER role
+        User user = User.createUser (
+                request.name (),
+                request.lastName (),
+                passwordEncoder.encode ( request.password () ),
+                request.username (),
+                request.email ()
+        );
+
         userRepository.save ( user );
 
         UserResponse response = new UserResponse (
