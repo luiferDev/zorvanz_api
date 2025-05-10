@@ -23,30 +23,43 @@ public class SecurityFilter extends OncePerRequestFilter {
     private UserRepository userRepository;
 
     @Override
-    protected void doFilterInternal ( HttpServletRequest request,
-                                      HttpServletResponse response,
-                                      FilterChain filterChain ) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                  HttpServletResponse response,
+                                  FilterChain filterChain) throws ServletException, IOException {
 
-        var token = recuperarToken ( request );
-        if ( token != null ) {
-            var subject = tokenService.getSubjectFromAccessToken ( token ); // extrae username del token
-            var usuario = userRepository.findByUserName ( subject );
-
-            if ( usuario != null ) {
-                var authentication = new UsernamePasswordAuthenticationToken (
-                        usuario, null, usuario.getAuthorities () );
-
-                SecurityContextHolder.getContext ().setAuthentication ( authentication );
+        var token = recuperarToken(request);
+        if (token != null) {
+            try {
+                var subject = tokenService.getSubjectFromAccessToken(token); // extrae username del token
+                var usuario = userRepository.findByUserName(subject);
+                
+                // Get the role from the token
+                Role role = tokenService.getRoleFromToken(token);
+                
+                if (usuario != null) {
+                    // Create authentication with authorities from the token
+                    var authentication = new UsernamePasswordAuthenticationToken(
+                            usuario, null, Collections.singletonList(new SimpleGrantedAuthority(role.name())));
+                    
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            } catch (Exception e) {
+                // Log the error but continue the filter chain
+                System.out.println("Error validating token: " + e.getMessage());
             }
         }
 
-        filterChain.doFilter ( request, response );
+        filterChain.doFilter(request, response);
     }
 
     private String recuperarToken ( HttpServletRequest request ) {
         var authHeader = request.getHeader ( "Authorization" );
         if ( authHeader != null && authHeader.startsWith ( "Bearer " ) ) {
             return authHeader.substring ( 7 );
+    private String recuperarToken(HttpServletRequest request) {
+        var authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
         }
         return null;
     }
