@@ -1,5 +1,7 @@
 package com.api.zorvanz.infra.security;
 
+import com.api.zorvanz.domain.users.Role;
+import com.api.zorvanz.domain.users.User;
 import com.api.zorvanz.domain.users.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -7,11 +9,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
@@ -52,10 +56,6 @@ public class SecurityFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String recuperarToken ( HttpServletRequest request ) {
-        var authHeader = request.getHeader ( "Authorization" );
-        if ( authHeader != null && authHeader.startsWith ( "Bearer " ) ) {
-            return authHeader.substring ( 7 );
     private String recuperarToken(HttpServletRequest request) {
         var authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -64,4 +64,3 @@ public class SecurityFilter extends OncePerRequestFilter {
         return null;
     }
 }
-
