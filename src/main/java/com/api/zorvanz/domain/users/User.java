@@ -69,7 +69,16 @@ public class User implements UserDetails {
      */
     @Override
     public Collection < ? extends GrantedAuthority > getAuthorities () {
-        return List.of ( new SimpleGrantedAuthority ( "ROLE_" + role ) );
+        return List.of ( new SimpleGrantedAuthority ( role.name () ) );
+    }
+
+    /**
+     * Checks if the user has admin privileges
+     *
+     * @return true if the user has the ROLE_ADMIN role
+     */
+    public boolean isAdmin () {
+        return role == Role.ROLE_ADMIN;
     }
 
     @Override
