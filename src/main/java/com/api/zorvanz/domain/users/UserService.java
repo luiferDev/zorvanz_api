@@ -1,6 +1,8 @@
 package com.api.zorvanz.domain.users;
 
 import com.api.zorvanz.infra.security.TokenService;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,10 +15,12 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
 
-    public UserService ( UserRepository userRepository, PasswordEncoder passwordEncoder ) {
+    public UserService ( UserRepository userRepository,
+                         PasswordEncoder passwordEncoder,
+                         TokenService tokenService ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.tokenService = new TokenService ();
+        this.tokenService = tokenService;
     }
 
     @Async
@@ -82,12 +86,12 @@ public class UserService {
     @Async
     public CompletableFuture < Pair < String, Role > > refreshAccessToken ( String refreshToken ) {
         String username = tokenService.getSubjectFromRefreshToken ( refreshToken );
-        String newAccess = tokenService.generarRefreshToken (
-                userRepository.findUserName ( username )
-                        .orElseThrow ( () -> new RuntimeException ( "User not found" ) )
-        );
-        return CompletableFuture.completedFuture ( newAccess );
+        User user = userRepository.findUserName ( username )
+                .orElseThrow ( () -> new RuntimeException ( "User not found" ) );
+
+        String newAccessToken = tokenService.generarAccessToken ( user );
+        Role userRole = user.getRole ();
+
+        return CompletableFuture.completedFuture ( new ImmutablePair <> ( newAccessToken, userRole ) );
     }
-
-
 }
